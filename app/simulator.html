@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Traefik — Interactive Simulator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: { DEFAULT: '#24a5a5', dark: '#0f7a7a', light: '#e6f7f7' },
+          ink: '#0f172a',
+        },
+        fontFamily: {
+          mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  html { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+  .node-pulse { animation: pulse 0.8s ease-in-out; }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(36,165,165,0); }
+    50% { box-shadow: 0 0 0 8px rgba(36,165,165,0.35); transform: scale(1.03); }
+  }
+  .packet {
+    position: absolute; width: 18px; height: 18px; border-radius: 9999px;
+    background: #24a5a5; box-shadow: 0 0 12px 3px rgba(36,165,165,0.6);
+    z-index: 40; transition: all 0.55s cubic-bezier(.4,0,.2,1); opacity: 0;
+  }
+  .log-enter { animation: logIn .25s ease-out; }
+  @keyframes logIn { from { opacity:0; transform: translateX(-6px);} to {opacity:1; transform:none;} }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+</style>
+</head>
+<body class="bg-slate-50 text-ink antialiased">
+
+<!-- ===== HEADER ===== -->
+<header class="bg-ink text-white">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg bg-brand grid place-items-center font-bold text-lg">T</div>
+      <div>
+        <h1 class="font-semibold leading-tight">Traefik — The Cloud Native Reverse Proxy</h1>
+        <p class="text-xs text-slate-400">Internal Session · Interactive Walkthrough</p>
+      </div>
+    </a>
+    <nav class="hidden md:flex gap-6 text-sm text-slate-300">
+      <a href="index.html#why" class="hover:text-brand">Why</a>
+      <a href="index.html#concepts" class="hover:text-brand">Concepts</a>
+      <a href="simulator.html" class="text-brand">Simulator</a>
+      <a href="animations.html" class="hover:text-brand">Animations</a>
+      <a href="config.html" class="hover:text-brand">Sample Configuration</a>
+      <a href="/docs/intro" class="hover:text-brand">📚 Docs</a>
+      <a href="index.html#recap" class="hover:text-brand">Recap</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== SIMULATOR ===== -->
+<section class="max-w-6xl mx-auto px-6 py-14">
+  <h3 class="text-2xl font-bold">Interactive Simulator</h3>
+  <p class="text-slate-600 mt-2 max-w-3xl">Send a request and watch it travel through Traefik. Traefik evaluates routers <strong>top-to-bottom by priority</strong>, applies middlewares, then load-balances to a healthy backend replica. Toggle replicas off to see failover.</p>
+
+  <!-- Request bar -->
+  <div class="mt-6 bg-white rounded-xl border border-slate-200 p-4 flex flex-wrap items-center gap-3">
+    <span class="text-sm font-medium text-slate-500">GET</span>
+    <input id="reqUrl" value="https://app.local/home" class="flex-1 min-w-[220px] font-mono text-sm border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand" />
+    <button id="sendBtn" class="bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2 rounded-lg transition">Send Request ▶</button>
+    <div class="w-full flex flex-wrap gap-2 pt-1">
+      <span class="text-xs text-slate-400 self-center">Try:</span>
+      <button class="preset text-xs bg-slate-100 hover:bg-brand-light px-2 py-1 rounded" data-url="https://app.local/home">app.local</button>
+      <button class="preset text-xs bg-slate-100 hover:bg-brand-light px-2 py-1 rounded" data-url="https://api.local/v1/users">api.local/v1</button>
+      <button class="preset text-xs bg-slate-100 hover:bg-brand-light px-2 py-1 rounded" data-url="http://app.local/home">http (redirect)</button>
+      <button class="preset text-xs bg-slate-100 hover:bg-brand-light px-2 py-1 rounded" data-url="https://admin.local/dashboard">admin.local (auth)</button>
+      <button class="preset text-xs bg-slate-100 hover:bg-brand-light px-2 py-1 rounded" data-url="https://unknown.local/">unknown.local (404)</button>
+    </div>
+  </div>
+
+  <!-- Flow diagram -->
+  <div id="stage" class="relative mt-6 bg-white rounded-xl border border-slate-200 p-6 overflow-hidden">
+    <div class="grid grid-cols-5 gap-2 items-center relative z-10">
+      <!-- Client -->
+      <div class="flex flex-col items-center gap-2">
+        <div id="n-client" class="w-full aspect-square max-w-[120px] rounded-xl border-2 border-slate-300 bg-slate-50 grid place-items-center text-center p-2">
+          <div>
+            <div class="text-2xl">🌐</div>
+            <div class="text-xs font-semibold mt-1">Client</div>
+            <div class="text-[10px] text-slate-400">Browser</div>
+          </div>
+        </div>
+      </div>
+      <!-- EntryPoint -->
+      <div class="flex flex-col items-center gap-2">
+        <div id="n-entry" class="w-full aspect-square max-w-[120px] rounded-xl border-2 border-slate-300 bg-slate-50 grid place-items-center text-center p-2">
+          <div>
+            <div class="text-2xl">🚪</div>
+            <div class="text-xs font-semibold mt-1">EntryPoint</div>
+            <div id="entryPort" class="text-[10px] text-slate-400">:443</div>
+          </div>
+        </div>
+      </div>
+      <!-- Router -->
+      <div class="flex flex-col items-center gap-2">
+        <div id="n-router" class="w-full aspect-square max-w-[120px] rounded-xl border-2 border-slate-300 bg-slate-50 grid place-items-center text-center p-2">
+          <div>
+            <div class="text-2xl">🧭</div>
+            <div class="text-xs font-semibold mt-1">Router</div>
+            <div id="routerName" class="text-[10px] text-slate-400">rule match</div>
+          </div>
+        </div>
+      </div>
+      <!-- Middleware -->
+      <div class="flex flex-col items-center gap-2">
+        <div id="n-mw" class="w-full aspect-square max-w-[120px] rounded-xl border-2 border-slate-300 bg-slate-50 grid place-items-center text-center p-2">
+          <div>
+            <div class="text-2xl">⚙️</div>
+            <div class="text-xs font-semibold mt-1">Middleware</div>
+            <div id="mwName" class="text-[10px] text-slate-400">optional</div>
+          </div>
+        </div>
+      </div>
+      <!-- Service -->
+      <div class="flex flex-col items-center gap-2">
+        <div id="n-service" class="w-full aspect-square max-w-[120px] rounded-xl border-2 border-slate-300 bg-slate-50 grid place-items-center text-center p-2">
+          <div>
+            <div class="text-2xl">📦</div>
+            <div class="text-xs font-semibold mt-1">Service</div>
+            <div id="svcName" class="text-[10px] text-slate-400">backend</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- moving packet -->
+    <div id="packet" class="packet"></div>
+    <!-- result badge -->
+    <div id="resultBadge" class="mt-6 hidden text-center">
+      <span id="resultText" class="inline-block font-mono text-sm px-4 py-2 rounded-lg"></span>
+    </div>
+  </div>
+
+  <!-- Config + Log grid -->
+  <div class="grid lg:grid-cols-2 gap-6 mt-6">
+    <!-- Routing table -->
+    <div class="bg-white rounded-xl border border-slate-200 p-5">
+      <h4 class="font-semibold flex items-center gap-2">🗺️ Dynamic Config <span class="text-xs font-normal text-slate-400">(what Traefik discovered)</span></h4>
+      <div class="mt-4 space-y-3 text-sm" id="routerList"></div>
+    </div>
+    <!-- Live log -->
+    <div class="bg-ink rounded-xl border border-slate-800 p-5">
+      <div class="flex items-center justify-between">
+        <h4 class="font-semibold text-slate-200 flex items-center gap-2">📜 Traefik access log</h4>
+        <button id="clearLog" class="text-xs text-slate-400 hover:text-white">clear</button>
+      </div>
+      <div id="log" class="mt-3 font-mono text-xs text-slate-300 space-y-1 h-64 overflow-y-auto"></div>
+    </div>
+  </div>
+
+  <!-- Service health toggles -->
+  <div class="bg-white rounded-xl border border-slate-200 p-5 mt-6">
+    <h4 class="font-semibold flex items-center gap-2">🩺 Backend replicas <span class="text-xs font-normal text-slate-400">(toggle to simulate health / load balancing)</span></h4>
+    <div id="replicaGrid" class="grid sm:grid-cols-2 gap-4 mt-4"></div>
+  </div>
+</section>
+
+<script>
+/* ------------------ SIMULATED TRAEFIK CONFIG ------------------ */
+const services = {
+  'web-app':   { label: 'web-app', replicas: [ {id:'app-1', up:true}, {id:'app-2', up:true} ], rrIndex: 0 },
+  'api':       { label: 'api',     replicas: [ {id:'api-1', up:true}, {id:'api-2', up:true}, {id:'api-3', up:true} ], rrIndex: 0 },
+  'admin':     { label: 'admin',   replicas: [ {id:'admin-1', up:true} ], rrIndex: 0 },
+};
+
+// Routers evaluated by priority (higher first)
+const routers = [
+  { name: 'api-router',   rule: 'Host(`api.local`) && PathPrefix(`/v1`)', host:'api.local',   path:'/v1',   service:'api',     middleware:null,        priority: 20 },
+  { name: 'admin-router', rule: 'Host(`admin.local`)',                    host:'admin.local', path:'/',     service:'admin',   middleware:'basic-auth',priority: 15 },
+  { name: 'app-router',   rule: 'Host(`app.local`)',                      host:'app.local',   path:'/',     service:'web-app', middleware:null,        priority: 10 },
+];
+
+/* ------------------ DOM ------------------ */
+const $ = id => document.getElementById(id);
+const nodes = ['n-client','n-entry','n-router','n-mw','n-service'].map($);
+const packet = $('packet');
+
+/* ------------------ RENDER CONFIG PANELS ------------------ */
+function renderRouterList(){
+  $('routerList').innerHTML = routers.map(r => `
+    <div class="border border-slate-200 rounded-lg p-3">
+      <div class="flex items-center justify-between">
+        <span class="font-semibold text-brand-dark">${r.name}</span>
+        <span class="text-[10px] bg-slate-100 px-2 py-0.5 rounded">priority ${r.priority}</span>
+      </div>
+      <div class="font-mono text-xs text-slate-500 mt-1">${escapeHtml(r.rule)}</div>
+      <div class="text-xs text-slate-500 mt-1">→ service <b>${r.service}</b>${r.middleware ? ` · mw <b>${r.middleware}</b>` : ''}</div>
+    </div>`).join('');
+}
+function renderReplicas(){
+  $('replicaGrid').innerHTML = Object.values(services).map(s => `
+    <div class="border border-slate-200 rounded-lg p-3">
+      <div class="font-semibold text-sm mb-2">${s.label}</div>
+      <div class="flex flex-wrap gap-2">
+        ${s.replicas.map(rep => `
+          <button data-svc="${s.label}" data-rep="${rep.id}"
+            class="repToggle text-xs px-2 py-1 rounded border ${rep.up ? 'bg-green-50 border-green-300 text-green-700' : 'bg-red-50 border-red-300 text-red-500 line-through'}">
+            ${rep.id} ${rep.up ? '● up' : '○ down'}
+          </button>`).join('')}
+      </div>
+    </div>`).join('');
+  document.querySelectorAll('.repToggle').forEach(b => b.onclick = () => {
+    const s = services[b.dataset.svc]; const rep = s.replicas.find(r=>r.id===b.dataset.rep);
+    rep.up = !rep.up; renderReplicas();
+  });
+}
+function escapeHtml(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+
+/* ------------------ LOGGING ------------------ */
+function log(msg, type='info'){
+  const colors = { info:'text-slate-300', ok:'text-green-400', warn:'text-amber-400', err:'text-red-400', step:'text-brand' };
+  const time = new Date().toLocaleTimeString('en-GB');
+  const el = document.createElement('div');
+  el.className = `log-enter ${colors[type]||''}`;
+  el.innerHTML = `<span class="text-slate-600">${time}</span> ${msg}`;
+  $('log').appendChild(el);
+  $('log').scrollTop = $('log').scrollHeight;
+}
+
+/* ------------------ ANIMATION HELPERS ------------------ */
+function resetNodes(){
+  nodes.forEach(n => { n.className = n.className.replace(/border-\S+/g,'border-slate-300').replace('bg-brand-light','bg-slate-50'); n.classList.remove('node-pulse','bg-brand-light'); });
+  $('resultBadge').classList.add('hidden');
+}
+function lightNode(node, color='brand'){
+  node.classList.remove('border-slate-300','bg-slate-50');
+  node.classList.add(color==='err'?'border-red-400':'border-brand', color==='err'?'bg-red-50':'bg-brand-light','node-pulse');
+}
+function movePacketTo(node, opts={}){
+  return new Promise(res => {
+    const stage = $('stage').getBoundingClientRect();
+    const b = node.getBoundingClientRect();
+    packet.style.opacity = '1';
+    packet.style.background = opts.err ? '#ef4444' : '#24a5a5';
+    packet.style.left = (b.left - stage.left + b.width/2 - 9) + 'px';
+    packet.style.top  = (b.top  - stage.top  + b.height/2 - 9) + 'px';
+    setTimeout(res, 560);
+  });
+}
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+
+/* ------------------ CORE: process a request ------------------ */
+function parseUrl(raw){
+  try { const u = new URL(raw); return { scheme:u.protocol.replace(':',''), host:u.hostname, path:u.pathname||'/' }; }
+  catch { return null; }
+}
+function matchRouter(host, path){
+  const sorted = [...routers].sort((a,b)=>b.priority-a.priority);
+  for(const r of sorted){ if(r.host===host && path.startsWith(r.path)) return r; }
+  return null;
+}
+function pickReplica(svc){
+  const s = services[svc]; const up = s.replicas.filter(r=>r.up);
+  if(up.length===0) return null;
+  const chosen = up[s.rrIndex % up.length]; s.rrIndex++;
+  return chosen;
+}
+
+let running = false;
+async function sendRequest(){
+  if(running) return; running = true; $('sendBtn').disabled = true; $('sendBtn').classList.add('opacity-60');
+  resetNodes();
+  const parsed = parseUrl($('reqUrl').value.trim());
+  if(!parsed){ log('✖ Invalid URL','err'); finish(); return; }
+
+  log(`▶ Incoming ${parsed.scheme.toUpperCase()} request → ${parsed.host}${parsed.path}`,'step');
+
+  // 1 client
+  lightNode(nodes[0]); await movePacketTo(nodes[0]);
+
+  // 2 entrypoint
+  $('entryPort').textContent = parsed.scheme==='https' ? ':443 (websecure)' : ':80 (web)';
+  lightNode(nodes[1]); await movePacketTo(nodes[1]);
+  log(`↳ EntryPoint ${parsed.scheme==='https'?'websecure :443':'web :80'} accepted connection`);
+
+  // HTTP -> HTTPS redirect middleware
+  if(parsed.scheme==='http'){
+    await sleep(300);
+    log('↳ Global redirect middleware: 301 → https://','warn');
+    showResult('301 Moved Permanently → https://'+parsed.host+parsed.path,'warn');
+    finish(); return;
+  }
+
+  // 3 router matching
+  lightNode(nodes[2]); await movePacketTo(nodes[2]);
+  const router = matchRouter(parsed.host, parsed.path);
+  if(!router){
+    $('routerName').textContent = 'no match';
+    log(`✖ No router matched Host(\`${parsed.host}\`)`,'err');
+    lightNode(nodes[2],'err');
+    showResult('404 Not Found','err');
+    finish(); return;
+  }
+  $('routerName').textContent = router.name;
+  log(`↳ Matched router "${router.name}"  ${router.rule}`,'ok');
+
+  // 4 middleware
+  if(router.middleware){
+    lightNode(nodes[3]); await movePacketTo(nodes[3]);
+    $('mwName').textContent = router.middleware;
+    if(router.middleware==='basic-auth'){
+      log('↳ Middleware basic-auth: challenging credentials…','warn');
+      await sleep(400);
+      log('↳ basic-auth: 401 Unauthorized (no credentials in this demo)','warn');
+      showResult('401 Unauthorized (auth required)','warn');
+      finish(); return;
+    }
+  } else {
+    $('mwName').textContent = '— none —';
+    await movePacketTo(nodes[3]);
+  }
+
+  // 5 service + load balance
+  lightNode(nodes[4]); await movePacketTo(nodes[4]);
+  $('svcName').textContent = router.service;
+  const replica = pickReplica(router.service);
+  if(!replica){
+    log(`✖ Service "${router.service}" has NO healthy replicas`,'err');
+    lightNode(nodes[4],'err');
+    showResult('502 Bad Gateway (no healthy backend)','err');
+    finish(); return;
+  }
+  log(`↳ Load-balanced to replica "${replica.id}" of service "${router.service}"`,'ok');
+  await sleep(250);
+  showResult(`200 OK · served by ${replica.id}`,'ok');
+  log(`✔ 200 OK  (${parsed.host}${parsed.path} → ${replica.id})`,'ok');
+  finish();
+}
+
+function showResult(text, type){
+  const badge = $('resultBadge'), t = $('resultText');
+  badge.classList.remove('hidden');
+  const styles = { ok:'bg-green-100 text-green-700', warn:'bg-amber-100 text-amber-700', err:'bg-red-100 text-red-700' };
+  t.className = `inline-block font-mono text-sm px-4 py-2 rounded-lg ${styles[type]||styles.ok}`;
+  t.textContent = text;
+}
+function finish(){ setTimeout(()=>{ packet.style.opacity='0'; running=false; $('sendBtn').disabled=false; $('sendBtn').classList.remove('opacity-60'); }, 400); }
+
+/* ------------------ WIRING ------------------ */
+$('sendBtn').onclick = sendRequest;
+$('reqUrl').addEventListener('keydown', e=>{ if(e.key==='Enter') sendRequest(); });
+$('clearLog').onclick = ()=> $('log').innerHTML='';
+document.querySelectorAll('.preset').forEach(b=> b.onclick=()=>{ $('reqUrl').value=b.dataset.url; sendRequest(); });
+
+renderRouterList(); renderReplicas();
+log('Traefik started · watching Docker provider','ok');
+log('Discovered 3 routers, 3 services','info');
+</script>
+</body>
+</html>

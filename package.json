@@ -1,0 +1,51 @@
+{
+  "name": "traefik-mastery",
+  "version": "1.0.0",
+  "description": "A comprehensive learning resource for mastering Traefik reverse proxy and networking fundamentals",
+  "private": true,
+  "scripts": {
+    "docusaurus": "docusaurus",
+    "start": "node scripts/dev-server.js",
+    "start:docs": "docusaurus start",
+    "build": "docusaurus build && node scripts/merge-static.js",
+    "build:docs": "docusaurus build",
+    "swizzle": "docusaurus swizzle",
+    "deploy": "docusaurus deploy",
+    "clear": "docusaurus clear",
+    "serve": "serve dist -l 3000",
+    "serve:docs": "docusaurus serve",
+    "write-translations": "docusaurus write-translations",
+    "write-heading-ids": "docusaurus write-heading-ids"
+  },
+  "dependencies": {
+    "@docusaurus/core": "^3.10.1",
+    "@docusaurus/preset-classic": "^3.10.1",
+    "clsx": "^2.1.1",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "http-proxy": "^1.18.1",
+    "serve": "^14.2.1",
+    "typescript": "^5.4.5"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "last 2 versions",
+      "Firefox ESR",
+      "not dead"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0"
+  }
+}

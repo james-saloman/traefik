@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Traefik — Ignition Request Flow Animation</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: { DEFAULT: '#24a5a5', dark: '#0f7a7a', light: '#e6f7f7' },
+          ink: '#0f172a',
+        },
+        fontFamily: {
+          mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  html { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+  .node-pulse { animation: pulse 0.8s ease-in-out; }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(36,165,165,0); }
+    50% { box-shadow: 0 0 0 8px rgba(36,165,165,0.35); transform: scale(1.03); }
+  }
+  .packet {
+    position: absolute; width: 18px; height: 18px; border-radius: 9999px;
+    background: #24a5a5; box-shadow: 0 0 12px 3px rgba(36,165,165,0.6);
+    z-index: 40; transition: all 0.55s cubic-bezier(.4,0,.2,1); opacity: 0;
+  }
+  .log-enter { animation: logIn .25s ease-out; }
+  @keyframes logIn { from { opacity:0; transform: translateX(-6px);} to {opacity:1; transform:none;} }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+</style>
+</head>
+<body class="bg-slate-50 text-ink antialiased">
+
+<!-- ===== HEADER ===== -->
+<header class="bg-ink text-white">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg bg-brand grid place-items-center font-bold text-lg">T</div>
+      <div>
+        <h1 class="font-semibold leading-tight">Traefik — The Cloud Native Reverse Proxy</h1>
+        <p class="text-xs text-slate-400">Internal Session · Interactive Walkthrough</p>
+      </div>
+    </a>
+    <nav class="hidden md:flex gap-6 text-sm text-slate-300">
+      <a href="index.html#why" class="hover:text-brand">Why</a>
+      <a href="index.html#concepts" class="hover:text-brand">Concepts</a>
+      <a href="simulator.html" class="hover:text-brand">Simulator</a>
+      <a href="animations.html" class="text-brand">Animations</a>
+      <a href="config.html" class="hover:text-brand">Sample Configuration</a>
+      <a href="/docs/intro" class="hover:text-brand">📚 Docs</a>
+      <a href="index.html#recap" class="hover:text-brand">Recap</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== ANIMATIONS ===== -->
+<section class="max-w-6xl mx-auto px-6 py-14">
+  <h3 class="text-2xl font-bold">From browser to Ignition Gateway</h3>
+  <p class="text-slate-600 mt-2 max-w-3xl">
+    Traefik isn't just for simple web apps — it's the front door for Inductive Automation's <strong>Ignition</strong>
+    platform too. Here's what actually happens, hop by hop, when someone opens a Perspective session and the
+    Ignition Gateway is running inside a Docker container behind Traefik.
+  </p>
+
+  <div class="mt-6 bg-slate-50 rounded-xl border border-slate-200 p-4 flex items-center justify-between flex-wrap gap-3">
+    <p class="text-sm text-slate-500">Press play to trace a real request to <code class="text-xs bg-white border border-slate-200 px-1 rounded">https://ignition.internal/</code></p>
+    <button id="igPlayBtn" class="bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2 rounded-lg transition">▶ Play animation</button>
+  </div>
+
+  <!-- Flow diagram -->
+  <div id="igStage" class="relative mt-6 bg-white rounded-xl border border-slate-200 p-6 overflow-hidden">
+    <div class="grid grid-cols-5 gap-2 items-center relative z-10">
+      <div class="flex flex-col items-center gap-2">
+        <div id="ig-browser" class="w-full aspect-square max-w-[120px] rounded-xl border-2 border-slate-300 bg-slate-50 grid place-items-center text-center p-2">
+          <div>
+            <div class="text-2xl">🌐</div>
+            <div class="text-xs font-semibold mt-1">Browser</div>
+            <div class="text-[10px] text-slate-400">User</div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <div id="ig-entry" class="w-full aspect-square max-w-[120px] rounded-xl border-2 border-slate-300 bg-slate-50 grid place-items-center text-center p-2">
+          <div>
+            <div class="text-2xl">🚪</div>
+            <div class="text-xs font-semibold mt-1">Traefik</div>
+            <div class="text-[10px] text-slate-400">:443 TLS</div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <div id="ig-router" class="w-full aspect-square max-w-[120px] rounded-xl border-2 border-slate-300 bg-slate-50 grid place-items-center text-center p-2">
+          <div>
+            <div class="text-2xl">🧭</div>
+            <div class="text-xs font-semibold mt-1">Router</div>
+            <div class="text-[10px] text-slate-400">Host match</div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <div id="ig-docker" class="w-full aspect-square max-w-[120px] rounded-xl border-2 border-slate-300 bg-slate-50 grid place-items-center text-center p-2">
+          <div>
+            <div class="text-2xl">🐳</div>
+            <div class="text-xs font-semibold mt-1">Docker net</div>
+            <div class="text-[10px] text-slate-400">bridge</div>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-col items-center gap-2">
+        <div id="ig-gateway" class="w-full aspect-square max-w-[120px] rounded-xl border-2 border-slate-300 bg-slate-50 grid place-items-center text-center p-2">
+          <div>
+            <div class="text-2xl">🏭</div>
+            <div class="text-xs font-semibold mt-1">Ignition</div>
+            <div class="text-[10px] text-slate-400">Gateway :8088</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="igPacket" class="packet"></div>
+    <div id="igResultBadge" class="mt-6 hidden text-center">
+      <span id="igResultText" class="inline-block font-mono text-sm px-4 py-2 rounded-lg"></span>
+    </div>
+  </div>
+
+  <!-- Explanation log -->
+  <div class="bg-ink rounded-xl border border-slate-800 p-5 mt-6">
+    <div class="flex items-center justify-between">
+      <h4 class="font-semibold text-slate-200 flex items-center gap-2">📜 What's happening at each hop</h4>
+      <button id="igClearLog" class="text-xs text-slate-400 hover:text-white">clear</button>
+    </div>
+    <div id="igLog" class="mt-3 font-mono text-xs text-slate-300 space-y-1 h-56 overflow-y-auto"></div>
+  </div>
+
+  <p class="mt-6 text-sm text-slate-500 max-w-3xl">
+    The response — the rendered Perspective session or Vision applet — travels back through the exact same path:
+    Ignition Gateway → Docker network → Traefik → browser. The browser never talks to the container directly;
+    Traefik and Docker's internal networking are the only things that know the container's real IP and port.
+  </p>
+</section>
+
+<script>
+/* ------------------ IGNITION REQUEST-FLOW ANIMATION ------------------ */
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+
+const igNodes = ['ig-browser','ig-entry','ig-router','ig-docker','ig-gateway'].map($);
+const igPacket = $('igPacket');
+
+function igResetNodes(){
+  igNodes.forEach(n => { n.className = n.className.replace(/border-\S+/g,'border-slate-300').replace('bg-brand-light','bg-slate-50'); n.classList.remove('node-pulse','bg-brand-light'); });
+  $('igResultBadge').classList.add('hidden');
+}
+function igLightNode(node){
+  node.classList.remove('border-slate-300','bg-slate-50');
+  node.classList.add('border-brand','bg-brand-light','node-pulse');
+}
+function igMovePacketTo(node){
+  return new Promise(res => {
+    const stage = $('igStage').getBoundingClientRect();
+    const b = node.getBoundingClientRect();
+    igPacket.style.opacity = '1';
+    igPacket.style.background = '#24a5a5';
+    igPacket.style.left = (b.left - stage.left + b.width/2 - 9) + 'px';
+    igPacket.style.top  = (b.top  - stage.top  + b.height/2 - 9) + 'px';
+    setTimeout(res, 560);
+  });
+}
+function igLog(msg, type='info'){
+  const colors = { info:'text-slate-300', ok:'text-green-400', warn:'text-amber-400', err:'text-red-400', step:'text-brand' };
+  const time = new Date().toLocaleTimeString('en-GB');
+  const el = document.createElement('div');
+  el.className = `log-enter ${colors[type]||''}`;
+  el.innerHTML = `<span class="text-slate-600">${time}</span> ${msg}`;
+  $('igLog').appendChild(el);
+  $('igLog').scrollTop = $('igLog').scrollHeight;
+}
+function igShowResult(text, type){
+  const badge = $('igResultBadge'), t = $('igResultText');
+  badge.classList.remove('hidden');
+  const styles = { ok:'bg-green-100 text-green-700', warn:'bg-amber-100 text-amber-700', err:'bg-red-100 text-red-700' };
+  t.className = `inline-block font-mono text-sm px-4 py-2 rounded-lg ${styles[type]||styles.ok}`;
+  t.textContent = text;
+}
+
+let igRunning = false;
+async function igPlay(){
+  if(igRunning) return; igRunning = true; $('igPlayBtn').disabled = true; $('igPlayBtn').classList.add('opacity-60');
+  igResetNodes();
+  igLog('▶ Browser opens https://ignition.internal/ (Perspective session)','step');
+
+  igLightNode(igNodes[0]); await igMovePacketTo(igNodes[0]);
+  igLog('↳ DNS resolves ignition.internal → the server\'s public IP');
+
+  igLightNode(igNodes[1]); await igMovePacketTo(igNodes[1]);
+  igLog('↳ Traefik EntryPoint websecure :443 accepts the connection and terminates TLS');
+
+  igLightNode(igNodes[2]); await igMovePacketTo(igNodes[2]);
+  igLog('↳ Router matches Host(`ignition.internal`) → service "ignition-gateway"','ok');
+
+  igLightNode(igNodes[3]); await igMovePacketTo(igNodes[3]);
+  igLog('↳ Docker\'s internal bridge network resolves the service name to the container\'s private IP');
+
+  igLightNode(igNodes[4]); await igMovePacketTo(igNodes[4]);
+  igLog('↳ Request reaches the Ignition Gateway container on port 8088 (HTTP) / 8043 (HTTPS)');
+  await sleep(300);
+  igLog('↳ Gateway routes the request to the Perspective module and builds the session','ok');
+  await sleep(250);
+  igShowResult('200 OK · Perspective session streamed back','ok');
+  igLog('✔ Response flows back: Ignition → Docker network → Traefik → browser','ok');
+
+  igFinish();
+}
+function igFinish(){ setTimeout(()=>{ igPacket.style.opacity='0'; igRunning=false; $('igPlayBtn').disabled=false; $('igPlayBtn').classList.remove('opacity-60'); }, 400); }
+
+$('igPlayBtn').onclick = igPlay;
+$('igClearLog').onclick = ()=> $('igLog').innerHTML='';
+igLog('Ready · press play to trace a request','info');
+</script>
+</body>
+</html>

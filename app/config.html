@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Traefik — Sample Configuration</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: { DEFAULT: '#24a5a5', dark: '#0f7a7a', light: '#e6f7f7' },
+          ink: '#0f172a',
+        },
+        fontFamily: {
+          mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  html { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+</style>
+</head>
+<body class="bg-slate-50 text-ink antialiased">
+
+<!-- ===== HEADER ===== -->
+<header class="bg-ink text-white">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-lg bg-brand grid place-items-center font-bold text-lg">T</div>
+      <div>
+        <h1 class="font-semibold leading-tight">Traefik — The Cloud Native Reverse Proxy</h1>
+        <p class="text-xs text-slate-400">Internal Session · Interactive Walkthrough</p>
+      </div>
+    </a>
+    <nav class="hidden md:flex gap-6 text-sm text-slate-300">
+      <a href="index.html#why" class="hover:text-brand">Why</a>
+      <a href="index.html#concepts" class="hover:text-brand">Concepts</a>
+      <a href="simulator.html" class="hover:text-brand">Simulator</a>
+      <a href="animations.html" class="hover:text-brand">Animations</a>
+      <a href="config.html" class="text-brand">Sample Configuration</a>
+      <a href="/docs/intro" class="hover:text-brand">📚 Docs</a>
+      <a href="index.html#recap" class="hover:text-brand">Recap</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== SAMPLE CONFIGURATION ===== -->
+<section class="max-w-6xl mx-auto px-6 py-14">
+  <h3 class="text-2xl font-bold">Sample Configuration</h3>
+  <h4 class="mt-4 font-semibold text-lg">Sample <code class="text-sm bg-slate-100 px-1.5 py-0.5 rounded">docker-compose.yml</code></h4>
+  <p class="text-slate-600 mt-2 max-w-3xl text-sm">This is the exact shape of the setup shown in the Animations page — Traefik as the edge router, an Ignition Gateway container as the backend. Every line is commented so you can see what each one is actually doing.</p>
+  <div class="mt-4 bg-ink rounded-xl border border-slate-800 p-5 overflow-x-auto">
+    <pre class="font-mono text-xs text-slate-300 leading-relaxed"><code><span class="text-slate-500"># traefik-ignition.docker-compose.yml — minimal Traefik + Ignition Gateway setup</span>
+
+<span class="text-brand">services</span>:
+
+  <span class="text-slate-500"># --------------------------------------------------------------</span>
+  <span class="text-slate-500"># Traefik — the reverse proxy / edge router</span>
+  <span class="text-slate-500"># --------------------------------------------------------------</span>
+  <span class="text-amber-300">traefik</span>:
+    <span class="text-brand">image</span>: traefik:v3.1                                   <span class="text-slate-500"># pin a version; ":latest" can break configs silently on upgrade</span>
+    <span class="text-brand">container_name</span>: traefik
+    <span class="text-brand">command</span>:
+      - "--providers.docker=true"                         <span class="text-slate-500"># watch the Docker API for containers to route to</span>
+      - "--providers.docker.exposedbydefault=false"        <span class="text-slate-500"># only route containers that opt in with traefik.enable=true</span>
+      - "--entrypoints.web.address=:80"                    <span class="text-slate-500"># plain HTTP entrypoint, named "web"</span>
+      - "--entrypoints.websecure.address=:443"             <span class="text-slate-500"># HTTPS entrypoint, named "websecure"</span>
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"       <span class="text-slate-500"># send all :80 traffic to :443...</span>
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"       <span class="text-slate-500"># ...rewriting the scheme to https</span>
+      - "--certificatesresolvers.leresolver.acme.httpchallenge=true"        <span class="text-slate-500"># prove domain ownership via HTTP-01 challenge</span>
+      - "--certificatesresolvers.leresolver.acme.httpchallenge.entrypoint=web"   <span class="text-slate-500"># challenge is served on the :80 entrypoint</span>
+      - "--certificatesresolvers.leresolver.acme.email=devops@example.com"       <span class="text-slate-500"># required contact address for Let's Encrypt</span>
+      - "--certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json" <span class="text-slate-500"># where issued certs get cached on disk</span>
+    <span class="text-brand">ports</span>:
+      - "80:80"                                            <span class="text-slate-500"># expose entrypoint "web" to the host</span>
+      - "443:443"                                           <span class="text-slate-500"># expose entrypoint "websecure" to the host</span>
+    <span class="text-brand">volumes</span>:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"      <span class="text-slate-500"># read-only access to Docker so Traefik can see container labels</span>
+      - "./letsencrypt:/letsencrypt"                        <span class="text-slate-500"># persist certs across container restarts</span>
+    <span class="text-brand">networks</span>:
+      - proxy                                               <span class="text-slate-500"># shared network so Traefik can reach other containers by name</span>
+    <span class="text-brand">restart</span>: unless-stopped                                <span class="text-slate-500"># come back up after a host reboot or crash</span>
+
+  <span class="text-slate-500"># --------------------------------------------------------------</span>
+  <span class="text-slate-500"># Ignition Gateway — the backend service Traefik routes to</span>
+  <span class="text-slate-500"># --------------------------------------------------------------</span>
+  <span class="text-amber-300">ignition</span>:
+    <span class="text-brand">image</span>: inductiveautomation/ignition:latest             <span class="text-slate-500"># official Ignition Gateway image</span>
+    <span class="text-brand">container_name</span>: ignition-gateway
+    <span class="text-brand">environment</span>:
+      <span class="text-brand">ACCEPT_IGNITION_EULA</span>: "Y"                             <span class="text-slate-500"># required — image refuses to start without accepting the EULA</span>
+      <span class="text-brand">GATEWAY_ADMIN_USERNAME</span>: admin                          <span class="text-slate-500"># initial gateway admin username</span>
+      <span class="text-brand">GATEWAY_ADMIN_PASSWORD</span>: ${IGNITION_ADMIN_PASSWORD:-changeme}  <span class="text-slate-500"># from .env / shell, falls back to "changeme"</span>
+      <span class="text-brand">GATEWAY_RANDOM_ADMIN_PASSWORD</span>: "false"                 <span class="text-slate-500"># "true" would auto-generate a password on first boot instead</span>
+      <span class="text-brand">TZ</span>: Asia/Kolkata                                       <span class="text-slate-500"># container timezone, affects gateway logs/scheduling</span>
+    <span class="text-brand">volumes</span>:
+      - ignition-data:/usr/local/bin/ignition/data           <span class="text-slate-500"># persist projects, tags, and config across container recreation</span>
+    <span class="text-brand">networks</span>:
+      - proxy                                               <span class="text-slate-500"># same network as Traefik, so it's reachable by container name</span>
+    <span class="text-brand">labels</span>:
+      - "traefik.enable=true"                                            <span class="text-slate-500"># opt this container into Traefik routing</span>
+      - "traefik.http.routers.ignition.rule=Host(`ignition.internal`)"   <span class="text-slate-500"># route requests for this hostname here</span>
+      - "traefik.http.routers.ignition.entrypoints=websecure"            <span class="text-slate-500"># only accept this route on :443</span>
+      - "traefik.http.routers.ignition.tls.certresolver=leresolver"      <span class="text-slate-500"># auto-issue/renew TLS cert via the resolver above</span>
+      - "traefik.http.services.ignition.loadbalancer.server.port=8088"   <span class="text-slate-500"># Ignition's internal HTTP port to forward to</span>
+    <span class="text-brand">healthcheck</span>:
+      <span class="text-brand">test</span>: ["CMD", "curl", "-f", "http://localhost:8088/StatusPing"]  <span class="text-slate-500"># Ignition's built-in liveness endpoint</span>
+      <span class="text-brand">interval</span>: 30s                                          <span class="text-slate-500"># check every 30s</span>
+      <span class="text-brand">timeout</span>: 5s                                            <span class="text-slate-500"># give each check 5s to respond</span>
+      <span class="text-brand">retries</span>: 5                                             <span class="text-slate-500"># mark unhealthy after 5 consecutive failures</span>
+    <span class="text-brand">restart</span>: unless-stopped
+
+<span class="text-brand">networks</span>:
+  <span class="text-amber-300">proxy</span>:
+    <span class="text-brand">driver</span>: bridge                                          <span class="text-slate-500"># Docker's default isolated network driver</span>
+
+<span class="text-brand">volumes</span>:
+  <span class="text-amber-300">ignition-data</span>:                                          <span class="text-slate-500"># named volume, survives `docker compose down`</span></code></pre>
+  </div>
+</section>
+
+</body>
+</html>

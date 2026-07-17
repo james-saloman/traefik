@@ -1,0 +1,178 @@
+/**
+ * Traefik Mastery Custom Styles
+ */
+
+:root {
+  --ifm-color-primary: #ff6b6b;
+  --ifm-color-primary-dark: #ff5252;
+  --ifm-color-primary-darker: #ff3838;
+  --ifm-color-primary-darkest: #ff2121;
+  --ifm-color-primary-light: #ff8080;
+  --ifm-color-primary-lighter: #ff9999;
+  --ifm-color-primary-lightest: #ffb3b3;
+
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode color adjustments */
+[data-theme='dark'] {
+  --ifm-color-primary: #ff6b6b;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Code blocks styling */
+code {
+  border-radius: 2px;
+  padding: 2px 5px;
+  font-size: 13px;
+}
+
+/* Headers styling */
+h1, h2, h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Typography improvements */
+.docusaurus-highlighted-code-line {
+  background-color: rgba(0, 0, 0, 0.1);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+[data-theme='dark'] .docusaurus-highlighted-code-line {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Card styling for callouts */
+.alert {
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+.alert-info {
+  background-color: #e3f2fd;
+  border-left: 4px solid #2196f3;
+}
+
+[data-theme='dark'] .alert-info {
+  background-color: rgba(33, 150, 243, 0.1);
+  border-left: 4px solid #64b5f6;
+}
+
+.alert-warning {
+  background-color: #fff3e0;
+  border-left: 4px solid #ff9800;
+}
+
+[data-theme='dark'] .alert-warning {
+  background-color: rgba(255, 152, 0, 0.1);
+  border-left: 4px solid #ffb74d;
+}
+
+.alert-danger {
+  background-color: #ffebee;
+  border-left: 4px solid #f44336;
+}
+
+[data-theme='dark'] .alert-danger {
+  background-color: rgba(244, 67, 54, 0.1);
+  border-left: 4px solid #ef5350;
+}
+
+.alert-success {
+  background-color: #e8f5e9;
+  border-left: 4px solid #4caf50;
+}
+
+[data-theme='dark'] .alert-success {
+  background-color: rgba(76, 175, 80, 0.1);
+  border-left: 4px solid #81c784;
+}
+
+/* Links styling */
+a {
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--ifm-color-primary-dark);
+  text-decoration: underline;
+}
+
+/* Table styling */
+table {
+  width: 100%;
+  margin: 1rem 0;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 0.75rem;
+  border: 1px solid var(--ifm-table-border-color);
+}
+
+table th {
+  background-color: var(--ifm-table-head-background);
+  font-weight: 600;
+}
+
+/* Navbar adjustments */
+.navbar__logo {
+  height: 40px;
+  width: auto;
+}
+
+/* Docusaurus content styling */
+.markdown h1:first-child {
+  margin-top: 0;
+}
+
+/* Pre/code block adjustments */
+pre {
+  background-color: var(--ifm-pre-background);
+  border-radius: 8px;
+  padding: var(--ifm-pre-padding);
+  overflow-x: auto;
+}
+
+/* Sidebar improvements */
+.sidebar-menu {
+  font-size: 0.95rem;
+}
+
+.menu__link--active {
+  color: var(--ifm-color-primary);
+  font-weight: 600;
+}
+
+/* Footer adjustments */
+.footer {
+  background-color: var(--ifm-footer-background-color);
+  padding: 2rem 0;
+}
+
+/* Search bar styling */
+.DocSearch {
+  --docsearch-primary-color: var(--ifm-color-primary);
+}
+
+/* Breadcrumb styling */
+.breadcrumbs {
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+/* Tab styling */
+.tabs {
+  margin: 1.5rem 0;
+}
+
+.tabs__content {
+  border-radius: 0 0 8px 8px;
+}
