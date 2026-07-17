@@ -6,9 +6,9 @@ title: Traefik Mastery Learning Guide
 
 A comprehensive learning resource for mastering Traefik reverse proxy and modern networking fundamentals.
 
-## 📚 Table of Contents
+## Table of Contents
 
-### 1️⃣ Networking Fundamentals (11 files)
+### 1. Networking Fundamentals (11 files)
 Master the foundation of web communication:
 - **What is HTTP?** - Request-response model, methods, status codes
 - **HTTP vs HTTPS** - Encryption and security
@@ -22,7 +22,7 @@ Master the foundation of web communication:
 - **Container Networking** - Docker network concepts
 - **Why Ingress Exists** - Evolution of service exposure
 
-### 2️⃣ Traefik Core (13 files)
+### 2. Traefik Core (13 files)
 Learn Traefik's architecture and components:
 - **Overview** - What Traefik is and why to use it
 - **Entrypoints** - Where traffic enters (ports 80, 443)
@@ -38,7 +38,7 @@ Learn Traefik's architecture and components:
 - **TLS Certificates** - Certificate management
 - **Kubernetes Ingress** - K8s integration
 
-### 3️⃣ Internals (10 files)
+### 3. Internals (10 files)
 Deep dive into how Traefik works:
 - **Docker Event Watching** - Real-time container discovery
 - **Service Discovery** - Finding and tracking backends
@@ -51,7 +51,7 @@ Deep dive into how Traefik works:
 - **WebSocket Handling** - Long-lived connections
 - **Request Buffering** - Streaming vs buffering tradeoffs
 
-### 4️⃣ Debugging (10 files)
+### 4. Debugging (10 files)
 Troubleshoot and monitor Traefik:
 - **Access Logs** - Request tracking and analysis
 - **Debug Logs** - Diagnostic information
@@ -64,7 +64,7 @@ Troubleshoot and monitor Traefik:
 - **Kubernetes Debugging** - K8s-specific troubleshooting
 - **Security Best Practices** - Production security checklist
 
-### 5️⃣ Production Architecture (9 files)
+### 5. Production Architecture (9 files)
 Enterprise deployment patterns:
 - **Multi-service Apps** - Managing multiple services
 - **High Availability** - Fault tolerance strategies
@@ -76,7 +76,7 @@ Enterprise deployment patterns:
 - **CI/CD Integration** - Automated deployments
 - **Microservices Networking** - Service-to-service communication
 
-### 6️⃣ Hands-on Labs (9 directories)
+### 6. Hands-on Labs (9 directories)
 Learn by doing:
 - **Basic Routing** - Simple HTTP routing (START HERE)
 - **Host-based Routing** - Route by domain
@@ -88,21 +88,21 @@ Learn by doing:
 - **Load Balancing** - Multiple backend balancing
 - **Observability** - Monitoring and logging
 
-### 📊 Diagrams
+### Diagrams
 Visual representations:
 - Reverse proxy flow
 - TLS handshake
 - Docker networking
 - Traefik routing
 
-### 📋 Cheatsheets
+### Cheatsheets
 Quick reference guides:
 - Docker commands
 - Traefik CLI
 - Curl debugging
 - Troubleshooting checklist
 
-## 🚀 Getting Started
+## Getting Started
 
 ### For Beginners
 1. Start with **Networking Fundamentals** (01-networking-fundamentals/)
@@ -121,7 +121,7 @@ Quick reference guides:
 3. Master **Debugging** section
 4. Reference **Cheatsheets** daily
 
-## 💡 Key Concepts
+## Key Concepts
 
 **Reverse Proxy**: Sits between clients and backends, routing requests
 **Load Balancing**: Distributes traffic across multiple servers
@@ -130,7 +130,7 @@ Quick reference guides:
 **Middleware**: Request/response transformations
 **Zero-downtime**: Updating without interrupting service
 
-## 🎯 Learning Path
+## Learning Path
 
 ```
 Beginner → Intermediate → Advanced → Production Expert
@@ -140,7 +140,7 @@ Beginner → Intermediate → Advanced → Production Expert
  Concepts    Debugging    Metrics     Scaling
 ```
 
-## 📝 How to Use This Guide
+## How to Use This Guide
 
 Each file includes:
 - **Clear explanations** of concepts
@@ -152,7 +152,7 @@ Each file includes:
 
 Read files sequentially in each section, or jump to specific topics as needed.
 
-## 🔗 File Organization
+## File Organization
 
 ```
 docs/
@@ -166,7 +166,7 @@ docs/
 └── cheatsheets/ - Quick reference
 ```
 
-## ✅ Success Criteria
+## Success Criteria
 
 You'll know you're proficient when you can:
 - [ ] Explain HTTP, DNS, TCP/IP basics
@@ -178,7 +178,7 @@ You'll know you're proficient when you can:
 - [ ] Explain Traefik to your team
 - [ ] Troubleshoot production issues
 
-## 🎓 Next Steps
+## Next Steps
 
 After completing this guide:
 1. Deploy to your infrastructure
@@ -188,7 +188,7 @@ After completing this guide:
 5. Train your team
 6. Share back what you learned
 
-## 📞 Need Help?
+## Need Help?
 
 Stuck on something? Try:
 1. Check the troubleshooting guides
@@ -199,4 +199,4 @@ Stuck on something? Try:
 
 ---
 
-**Happy learning!** Master Traefik and become the expert in your organization. 🚀
+**Happy learning!** Master Traefik and become the expert in your organization.

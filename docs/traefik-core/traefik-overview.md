@@ -11,10 +11,10 @@ title: Traefik Overview
 ## The Problem Traefik Solves
 
 ```
-❌ Without Traefik:
+Without Traefik:
    New service added → Manually update load balancer config → Restart load balancer
 
-✅ With Traefik:
+With Traefik:
    New service added → Traefik auto-discovers it → Traffic flows immediately
 ```
 
@@ -154,11 +154,11 @@ routers:
 
 | Provider | Best For | Auto-Reload |
 |---|---|---|
-| **Docker** | Local dev, Docker Compose | ✅ Yes |
-| **Kubernetes** | K8s clusters | ✅ Yes |
-| **File** | Version control, mixed setups | ✅ Yes (with watch) |
-| **Docker Swarm** | Swarm clusters | ✅ Yes |
-| **Consul** | Consul users | ✅ Yes |
+| **Docker** | Local dev, Docker Compose | Yes |
+| **Kubernetes** | K8s clusters | Yes |
+| **File** | Version control, mixed setups | Yes (with watch) |
+| **Docker Swarm** | Swarm clusters | Yes |
+| **Consul** | Consul users | Yes |
 
 ## Real-World Example
 
@@ -177,7 +177,7 @@ Result: Zero configuration, zero downtime
 
 ## When to Use Traefik
 
-✅ **Great for:**
+**Great for:**
 - Docker Compose stacks
 - Kubernetes deployments
 - Microservices architecture
@@ -185,7 +185,7 @@ Result: Zero configuration, zero downtime
 - Want zero-config service discovery
 - Building API gateways
 
-❌ **Not ideal for:**
+**Not ideal for:**
 - Single service apps (overkill)
 - Low-level TCP routing only (use HAProxy)
 - Datacenter load balancing (use hardware LB)

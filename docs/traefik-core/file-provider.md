@@ -11,7 +11,7 @@ The **File provider** loads routing configuration from YAML or TOML files on dis
 ## When to Use File Provider
 
 ```
-✅ Use File Provider when:
+Use File Provider when:
    • Configuration is static/infrastructure-as-code
    • You want git history for all changes
    • Not using Docker or Kubernetes
@@ -19,7 +19,7 @@ The **File provider** loads routing configuration from YAML or TOML files on dis
    • Want to integrate with CI/CD pipelines
    • Running multiple environments (dev, staging, prod)
 
-❌ Not ideal for:
+Not ideal for:
    • Frequently changing service lists
    • Auto-scaling scenarios
    • Container-based deployments (use Docker provider)

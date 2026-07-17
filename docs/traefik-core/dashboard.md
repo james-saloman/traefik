@@ -15,25 +15,25 @@ The **Traefik Dashboard** is a real-time web interface that shows you everything
 │         Traefik Dashboard                    │
 ├──────────────────────────────────────────────┤
 │                                              │
-│ 📊 Overview                                  │
+│ Overview                                     │
 │    • Total routers active                    │
 │    • Total services running                  │
 │    • Middlewares in use                      │
 │                                              │
-│ 🔀 HTTP Routers                              │
+│ HTTP Routers                                 │
 │    • myapp: Host(example.com)                │
 │    • api: Host(api.example.com)              │
 │    • blog: Path(/blog/*)                     │
 │                                              │
-│ ⚙️  Services                                  │
+│ Services                                     │
 │    • myapp-service → [server1, server2]      │
 │    • api-service → [api1, api2, api3]        │
 │                                              │
-│ 🛡️  Middlewares                              │
+│ Middlewares                                  │
 │    • basicAuth (admin routes)                │
 │    • rateLimit (api routes)                  │
 │                                              │
-│ 📈 Real-time Stats                           │
+│ Real-time Stats                              │
 │    • Requests/sec                            │
 │    • Memory usage                            │
 │    • Active connections                      │

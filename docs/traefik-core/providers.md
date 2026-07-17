@@ -28,12 +28,12 @@ A **provider** is a source of configuration that tells Traefik about your servic
 
 | Provider | Watches | Best For | Hot-Reload |
 | --- | --- | --- | --- |
-| **Docker** | Container labels | Docker Compose, dev | ✅ Yes |
-| **Docker Swarm** | Swarm service labels | Docker Swarm clusters | ✅ Yes |
-| **Kubernetes** | Ingress resources | K8s clusters | ✅ Yes |
-| **File** | YAML/TOML files | Infrastructure-as-code | ✅ Yes |
-| **Consul** | Consul services | Consul deployments | ✅ Yes |
-| **API** | REST calls | Programmatic config | ✅ Direct |
+| **Docker** | Container labels | Docker Compose, dev | Yes |
+| **Docker Swarm** | Swarm service labels | Docker Swarm clusters | Yes |
+| **Kubernetes** | Ingress resources | K8s clusters | Yes |
+| **File** | YAML/TOML files | Infrastructure-as-code | Yes |
+| **Consul** | Consul services | Consul deployments | Yes |
+| **API** | REST calls | Programmatic config | Direct |
 
 ## Docker Provider
 

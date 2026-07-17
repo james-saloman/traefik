@@ -4,7 +4,7 @@ title: Introduction
 description: Welcome to Traefik Mastery - a comprehensive learning resource
 ---
 
-# Welcome to Traefik Mastery 🚀
+# Welcome to Traefik Mastery
 
 A comprehensive, practical guide to mastering **Traefik** – the modern reverse proxy and load balancer for cloud-native applications.
 
@@ -14,19 +14,19 @@ This course takes you from **networking fundamentals** all the way through **pro
 
 ### Learning Paths
 
-**👶 Beginner (1-2 weeks)**
+**Beginner (1-2 weeks)**
 - Networking Fundamentals (HTTP, HTTPS, DNS, TCP/IP)
 - Traefik Core concepts (entrypoints, routers, services)
 - First hands-on lab (basic routing)
 - Docker integration
 
-**👨‍💻 Experienced Developer (3-5 days)**
+**Experienced Developer (3-5 days)**
 - Traefik architecture deep-dive
 - Multiple hands-on labs
 - Middleware chains and authentication
 - Kubernetes integration
 
-**🏭 Operations (2-3 weeks)**
+**Operations (2-3 weeks)**
 - Production architecture patterns
 - High availability and monitoring
 - Troubleshooting and debugging
@@ -52,16 +52,16 @@ Debugging & Troubleshooting
 
 By the end of this course, you'll understand:
 
-✅ How HTTP/HTTPS work under the hood
-✅ What DNS resolution and service discovery are
-✅ How reverse proxies and load balancing work
-✅ Traefik architecture: entrypoints → routers → services → backends
-✅ Dynamic configuration and auto-discovery
-✅ TLS/SSL certificate management
-✅ Middleware chains for authentication, rate limiting, compression
-✅ Docker and Kubernetes integration
-✅ Debugging 404s, 502s, TLS issues
-✅ Production-grade deployment patterns
+- How HTTP/HTTPS work under the hood
+- What DNS resolution and service discovery are
+- How reverse proxies and load balancing work
+- Traefik architecture: entrypoints → routers → services → backends
+- Dynamic configuration and auto-discovery
+- TLS/SSL certificate management
+- Middleware chains for authentication, rate limiting, compression
+- Docker and Kubernetes integration
+- Debugging 404s, 502s, TLS issues
+- Production-grade deployment patterns
 
 ## Quick Start
 
@@ -106,14 +106,14 @@ Traefik is a **modern reverse proxy and load balancer** that automatically disco
 
 You'll know you've mastered Traefik when you can:
 
-1. ✅ Design routing rules for complex multi-service applications
-2. ✅ Set up automatic HTTPS with Let's Encrypt
-3. ✅ Implement authentication and rate limiting
-4. ✅ Debug 404s, 502s, and TLS issues
-5. ✅ Deploy with zero downtime
-6. ✅ Monitor and observe production traffic
-7. ✅ Build resilient, scalable architectures
+1. Design routing rules for complex multi-service applications
+2. Set up automatic HTTPS with Let's Encrypt
+3. Implement authentication and rate limiting
+4. Debug 404s, 502s, and TLS issues
+5. Deploy with zero downtime
+6. Monitor and observe production traffic
+7. Build resilient, scalable architectures
 
 ---
 
-**Ready?** Let's start with [HTTP Fundamentals](networking-fundamentals/what-is-http.md). 🎯
+**Ready?** Let's start with [HTTP Fundamentals](networking-fundamentals/what-is-http.md).

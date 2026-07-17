@@ -15,13 +15,13 @@ title: ACME and Let's Encrypt
 ## The Problem ACME Solves
 
 ```
-❌ Traditional Certificates:
+Traditional Certificates:
    • Expensive ($100+ per year)
    • Manual renewal process
    • Can expire and break sites
    • Complex certificate generation
 
-✅ Let's Encrypt + ACME:
+Let's Encrypt + ACME:
    • Completely free
    • Automatic renewal (you'll never forget)
    • 90-day validity prevents expiration
