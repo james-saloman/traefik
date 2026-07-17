@@ -134,3 +134,9 @@ cat > /etc/logrotate.d/traefik << 'EOF'
   notifempty
   missingok
 }
+EOF
+```
+
+## Key Takeaway
+
+Access logs record every request Traefik handles: client, method, path, status, duration, and which router/service served it. Enable JSON format for easy `jq` filtering, add filters to keep volume down, and rotate logs so they don't fill the disk.
