@@ -68,7 +68,7 @@ When adding a new doc page, add its path (without `.md`) to the matching categor
 
 - **`docusaurus.config.js`** — title/tagline/favicon, `baseUrl: '/docs/'`, `routeBasePath: '/'` (docs live at the root *of the docs plugin*, which itself is mounted at `/docs/`), navbar/footer links, Prism syntax theme (GitHub light / Dracula dark, extra languages: bash/yaml/toml/docker). The navbar has a manually-added "← App Home" link back to `/` — the app's front door.
 - **`sidebars.js`** — the doc navigation tree described above.
-- **`src/css/custom.css`** — primary color `#ff6b6b`, dark mode overrides via `[data-theme='dark']`.
+- **`src/css/custom.css`** — primary color `#24a5a5` (matches the `app/` front door's teal brand color), dark mode overrides via `[data-theme='dark']`.
 - **`src/pages/`** — currently empty; reserved for custom Docusaurus React pages if added later (distinct from the static `app/` pages).
 
 ## Editing Content
