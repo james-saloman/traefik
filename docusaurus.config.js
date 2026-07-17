@@ -4,15 +4,24 @@ const { themes } = require('prism-react-renderer');
 const lightCodeTheme = themes.github;
 const darkCodeTheme = themes.dracula;
 
+// The gh-pages build (npm run build:gh-pages) serves the merged site under
+// /traefik/ (GitHub Pages project-site path), so it needs a prefixed baseUrl.
+// Local dev/build stay unprefixed to match scripts/dev-server.js's fixed
+// '/docs' proxy path and the hardcoded '/docs/intro' links in app/*.html
+// (those get rewritten to '/traefik/docs/intro' by scripts/merge-static.js
+// only when DEPLOY_TARGET=gh-pages).
+const isGhPages = process.env.DEPLOY_TARGET === 'gh-pages';
+const appHomePath = isGhPages ? '/traefik/' : '/';
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Traefik Mastery',
   tagline: 'A comprehensive learning resource for mastering Traefik reverse proxy and networking fundamentals',
   favicon: 'img/favicon.ico',
-  url: 'http://localhost:3000',
-  baseUrl: '/docs/',
-  organizationName: 'traefik-learning',
-  projectName: 'traefik-mastery',
+  url: isGhPages ? 'https://james-saloman.github.io' : 'http://localhost:3000',
+  baseUrl: isGhPages ? '/traefik/docs/' : '/docs/',
+  organizationName: 'james-saloman',
+  projectName: 'traefik',
   onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   i18n: {
@@ -27,7 +36,7 @@ const config = {
         docs: {
           routeBasePath: '/',
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/yourusername/traefik-mastery/tree/main/',
+          editUrl: 'https://github.com/james-saloman/traefik/tree/main/',
         },
         blog: false,
         theme: {
@@ -49,7 +58,7 @@ const config = {
         {
           type: 'html',
           position: 'left',
-          value: '<a class="navbar__item navbar__link" href="/">← App Home</a>',
+          value: `<a class="navbar__item navbar__link" href="${appHomePath}">← App Home</a>`,
         },
         {
           type: 'docSidebar',
@@ -58,7 +67,7 @@ const config = {
           label: 'Docs',
         },
         {
-          href: 'https://github.com/yourusername/traefik-mastery',
+          href: 'https://github.com/james-saloman/traefik',
           label: 'GitHub',
           position: 'right',
         },
@@ -105,7 +114,7 @@ const config = {
           title: 'More',
           items: [
             {
-              html: '<a class="footer__link-item" href="/">← Back to App Home</a>',
+              html: `<a class="footer__link-item" href="${appHomePath}">← Back to App Home</a>`,
             },
             {
               label: 'Official Traefik Docs',

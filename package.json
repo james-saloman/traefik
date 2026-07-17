@@ -8,6 +8,7 @@
     "start": "node scripts/dev-server.js",
     "start:docs": "docusaurus start",
     "build": "docusaurus build && node scripts/merge-static.js",
+    "build:gh-pages": "DEPLOY_TARGET=gh-pages docusaurus build && DEPLOY_TARGET=gh-pages node scripts/merge-static.js",
     "build:docs": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
