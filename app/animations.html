@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Traefik — Ignition Request Flow Animation</title>
+<link rel="icon" type="image/png" href="/docs/img/traefik-logo.png" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
@@ -44,7 +45,7 @@
 <header class="bg-ink text-white">
   <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
     <a href="index.html" class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-lg bg-brand grid place-items-center font-bold text-lg">T</div>
+      <img src="/docs/img/traefik-logo.png" alt="Traefik logo" class="h-9 w-auto" />
       <div>
         <h1 class="font-semibold leading-tight">Traefik — The Cloud Native Reverse Proxy</h1>
         <p class="text-xs text-slate-400">Internal Session · Interactive Walkthrough</p>
@@ -57,7 +58,6 @@
       <a href="animations.html" class="text-brand">Animations</a>
       <a href="config.html" class="hover:text-brand">Sample Configuration</a>
       <a href="/docs/intro" class="hover:text-brand">Docs</a>
-      <a href="index.html#recap" class="hover:text-brand">Recap</a>
     </nav>
   </div>
 </header>
@@ -73,7 +73,7 @@
 
   <div class="mt-6 bg-slate-50 rounded-xl border border-slate-200 p-4 flex items-center justify-between flex-wrap gap-3">
     <p class="text-sm text-slate-500">Press play to trace a real request to <code class="text-xs bg-white border border-slate-200 px-1 rounded">https://ignition.internal/</code></p>
-    <button id="igPlayBtn" class="bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2 rounded-lg transition">▶ Play animation</button>
+    <button id="igPlayBtn" class="bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2 rounded-lg transition">Play animation</button>
   </div>
 
   <!-- Flow diagram -->

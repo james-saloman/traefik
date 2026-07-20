@@ -5,7 +5,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Networking Fundamentals',
-      collapsed: false,
+      collapsed: true,
       items: [
         'networking-fundamentals/what-is-http',
         'networking-fundamentals/http-vs-https',
@@ -23,7 +23,7 @@ const sidebars = {
     {
       type: 'category',
       label: 'Traefik Core',
-      collapsed: false,
+      collapsed: true,
       items: [
         'traefik-core/traefik-overview',
         'traefik-core/entrypoints',
@@ -38,31 +38,6 @@ const sidebars = {
         'traefik-core/acme-and-letsencrypt',
         'traefik-core/tls-certificates',
         'traefik-core/kubernetes-ingress',
-      ],
-    },
-    {
-      type: 'category',
-      label: 'Hands-on Labs',
-      collapsed: false,
-      items: [
-        {
-          type: 'category',
-          label: 'Lab 1: Basic Routing',
-          items: [
-            'hands-on-labs/basic-routing/README',
-            'hands-on-labs/basic-routing/architecture',
-            'hands-on-labs/basic-routing/exercises',
-            'hands-on-labs/basic-routing/troubleshooting',
-          ],
-        },
-        'hands-on-labs/host-based-routing/README',
-        'hands-on-labs/path-based-routing/README',
-        'hands-on-labs/https-lab/README',
-        'hands-on-labs/middlewares/README',
-        'hands-on-labs/rate-limiting/README',
-        'hands-on-labs/authentication/README',
-        'hands-on-labs/load-balancing/README',
-        'hands-on-labs/observability/README',
       ],
     },
     {
@@ -135,6 +110,31 @@ const sidebars = {
         'diagrams/tls-handshake',
         'diagrams/docker-networking',
         'diagrams/traefik-routing',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Hands-on Labs',
+      collapsed: true,
+      items: [
+        {
+          type: 'category',
+          label: 'Lab 1: Basic Routing',
+          items: [
+            'hands-on-labs/basic-routing/README',
+            'hands-on-labs/basic-routing/architecture',
+            'hands-on-labs/basic-routing/exercises',
+            'hands-on-labs/basic-routing/troubleshooting',
+          ],
+        },
+        'hands-on-labs/host-based-routing/README',
+        'hands-on-labs/path-based-routing/README',
+        'hands-on-labs/https-lab/README',
+        'hands-on-labs/middlewares/README',
+        'hands-on-labs/rate-limiting/README',
+        'hands-on-labs/authentication/README',
+        'hands-on-labs/load-balancing/README',
+        'hands-on-labs/observability/README',
       ],
     },
   ],

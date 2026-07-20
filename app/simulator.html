@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Traefik — Interactive Simulator</title>
+<link rel="icon" type="image/png" href="/docs/img/traefik-logo.png" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
@@ -44,10 +45,9 @@
 <header class="bg-ink text-white">
   <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
     <a href="index.html" class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-lg bg-brand grid place-items-center font-bold text-lg">T</div>
+      <img src="/docs/img/traefik-logo.png" alt="Traefik logo" class="h-9 w-auto" />
       <div>
         <h1 class="font-semibold leading-tight">Traefik — The Cloud Native Reverse Proxy</h1>
-        <p class="text-xs text-slate-400">Internal Session · Interactive Walkthrough</p>
       </div>
     </a>
     <nav class="hidden md:flex gap-6 text-sm text-slate-300">
@@ -57,7 +57,6 @@
       <a href="animations.html" class="hover:text-brand">Animations</a>
       <a href="config.html" class="hover:text-brand">Sample Configuration</a>
       <a href="/docs/intro" class="hover:text-brand">Docs</a>
-      <a href="index.html#recap" class="hover:text-brand">Recap</a>
     </nav>
   </div>
 </header>
@@ -71,7 +70,7 @@
   <div class="mt-6 bg-white rounded-xl border border-slate-200 p-4 flex flex-wrap items-center gap-3">
     <span class="text-sm font-medium text-slate-500">GET</span>
     <input id="reqUrl" value="https://app.local/home" class="flex-1 min-w-[220px] font-mono text-sm border border-slate-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-brand" />
-    <button id="sendBtn" class="bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2 rounded-lg transition">Send Request ▶</button>
+    <button id="sendBtn" class="bg-brand hover:bg-brand-dark text-white font-medium px-5 py-2 rounded-lg transition">Send Request</button>
     <div class="w-full flex flex-wrap gap-2 pt-1">
       <span class="text-xs text-slate-400 self-center">Try:</span>
       <button class="preset text-xs bg-slate-100 hover:bg-brand-light px-2 py-1 rounded" data-url="https://app.local/home">app.local</button>

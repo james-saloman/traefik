@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Traefik Explained — Interactive Session</title>
+<title>Traefik Explained</title>
+<link rel="icon" type="image/png" href="/docs/img/traefik-logo.png" />
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config = {
@@ -74,10 +75,10 @@
 <header class="bg-ink text-white">
   <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
     <a href="index.html" class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-lg bg-brand grid place-items-center font-bold text-lg">T</div>
+      <img src="/docs/img/traefik-logo.png" alt="Traefik logo" class="h-9 w-auto" />
       <div>
-        <h1 class="font-semibold leading-tight">Traefik — The Cloud Native Reverse Proxy</h1>
-        <p class="text-xs text-slate-400">Internal Session · Interactive Walkthrough</p>
+        <h1 class="font-semibold leading-tight">Traefik</h1>
+        <!-- <p class="text-xs text-slate-400">Internal Session · Interactive Walkthrough</p> -->
       </div>
     </a>
     <nav class="hidden md:flex gap-6 text-sm text-slate-300">
@@ -87,7 +88,6 @@
       <a href="animations.html" class="hover:text-brand">Animations</a>
       <a href="config.html" class="hover:text-brand">Sample Configuration</a>
       <a href="/docs/intro" class="hover:text-brand">Docs</a>
-      <a href="index.html#recap" class="hover:text-brand">Recap</a>
     </nav>
   </div>
 </header>
@@ -103,10 +103,11 @@
       The killer feature: it <strong>auto-discovers</strong> your services and configures itself. No restarts, no manual config edits.
     </p>
     <p class="mt-4 text-slate-600 max-w-2xl">
-      It's a single Go binary that runs as a container itself, watching providers like Docker, Kubernetes, or a static
-      config file for changes. The moment you spin up a new container with the right labels, Traefik picks it up and
-      starts routing traffic to it — no reload required. Think of it as the traffic cop standing between your users and
-      every service you run: it terminates TLS, applies routing rules, and forwards the request to a healthy backend.
+      Traefik itself is just one small program, usually running in its own container. It keeps watch for changes —
+      a new container starting up, a Kubernetes pod appearing, or a config file being edited — and updates its
+      routing right away, with no restart needed. Think of it as a traffic cop standing between your users and every
+      service you run: it handles HTTPS, checks each request against its rules, and sends it to a backend that's
+      actually healthy.
     </p>
     <div class="mt-6 grid sm:grid-cols-3 gap-3 max-w-2xl">
       <div class="bg-white rounded-lg border border-slate-200 px-4 py-3">
@@ -131,25 +132,25 @@
 
 <!-- ===== WHY ===== -->
 <section id="why" class="max-w-6xl mx-auto px-6 py-14">
-  <h3 class="text-2xl font-bold">Why do we even need this?</h3>
-  <p class="text-slate-600 mt-2 max-w-3xl">Imagine you deploy 10 microservices in containers. Each runs on some random internal port. How does the outside world reach them cleanly, securely, and with one certificate?</p>
+  <h3 class="text-2xl font-bold">Why put a reverse proxy in front of everything?</h3>
+  <p class="text-slate-600 mt-2 max-w-3xl">Say you deploy 10 microservices in containers, each listening on its own random internal port. Nothing outside the host knows those ports exist — so how do clients reach the right service, over HTTPS, without you wiring up TLS and routing by hand ten separate times?</p>
   <div class="grid md:grid-cols-2 gap-6 mt-8">
     <div class="bg-white rounded-xl border border-slate-200 p-6">
       <h4 class="font-semibold text-red-600 flex items-center gap-2">Without a reverse proxy</h4>
       <ul class="mt-3 space-y-2 text-sm text-slate-600 list-disc pl-5">
-        <li>Clients must know each service's IP + port (<code class="text-xs bg-slate-100 px-1 rounded">app:3001</code>, <code class="text-xs bg-slate-100 px-1 rounded">api:8080</code>…)</li>
-        <li>TLS/HTTPS certificates managed per service</li>
-        <li>No single place for auth, rate-limiting, redirects</li>
-        <li>Scaling or moving a service breaks clients</li>
+        <li>Every client has to track each service's own IP and port (<code class="text-xs bg-slate-100 px-1 rounded">app:3001</code>, <code class="text-xs bg-slate-100 px-1 rounded">api:8080</code>…)</li>
+        <li>TLS certificates are issued, renewed, and configured separately per service</li>
+        <li>Auth, rate-limiting, and redirects get reimplemented in every service instead of enforced in one place</li>
+        <li>Moving or scaling a service means updating every client that points at it</li>
       </ul>
     </div>
     <div class="bg-white rounded-xl border border-brand/40 p-6 ring-1 ring-brand/20">
       <h4 class="font-semibold text-brand-dark flex items-center gap-2">With Traefik</h4>
       <ul class="mt-3 space-y-2 text-sm text-slate-600 list-disc pl-5">
-        <li>One entry point (e.g. <code class="text-xs bg-slate-100 px-1 rounded">:443</code>) for everything</li>
-        <li>Automatic HTTPS via Let's Encrypt</li>
-        <li>Cross-cutting logic in reusable <em>middlewares</em></li>
-        <li>Auto-discovers containers via labels — self-configuring</li>
+        <li>One entry point (<code class="text-xs bg-slate-100 px-1 rounded">:443</code>) is all clients ever need to know</li>
+        <li>HTTPS is issued and renewed automatically via Let's Encrypt</li>
+        <li>Auth, rate-limiting, and redirects live in reusable <em>middlewares</em> shared across services</li>
+        <li>Containers are discovered via labels, so Traefik reconfigures itself as services come and go</li>
       </ul>
     </div>
   </div>
