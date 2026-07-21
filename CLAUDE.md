@@ -18,7 +18,7 @@ The `app/` pages are served at `/` and the docs are served at `/docs/*` (see "Tw
 - **`scripts/dev-server.js`** (runs on `npm start`) — a small Node HTTP server that listens on port 3000, serves `app/*.html` directly from disk, and reverse-proxies (including WebSocket, for hot-reload) everything under `/docs` to a `docusaurus start` process it spawns internally on port 3001. This is why `npm start` does *not* invoke `docusaurus start` directly — going through plain `docusaurus start` will get you the docs but not the `app/` pages at `/`.
 - **`scripts/merge-static.js`** (runs as part of `npm run build`) — after `docusaurus build` produces `/build`, this script wipes `/dist`, copies `/build` → `dist/docs`, and copies `app/` → `dist/` (root). The final servable artifact is `/dist`, not `/build`.
 
-Keep this in mind when editing `docusaurus.config.js`, `Dockerfile`, or the npm scripts — changes to one side (e.g. renaming `dist/`, changing the docs `baseUrl`, or changing the proxy port) generally require a matching change on the other side.
+Keep this in mind when editing `docusaurus.config.js` or the npm scripts — changes to one side (e.g. renaming `dist/`, changing the docs `baseUrl`, or changing the proxy port) generally require a matching change on the other side.
 
 ## Common Commands
 
@@ -26,7 +26,8 @@ Keep this in mind when editing `docusaurus.config.js`, `Dockerfile`, or the npm 
 |---------|---------|
 | `npm start` | Start the combined dev server (`scripts/dev-server.js`) at `http://localhost:3000` — serves `app/` at `/` and proxies Docusaurus (hot-reload) at `/docs` |
 | `npm run start:docs` | Start plain `docusaurus start` (docs only, no `app/`, no proxy) |
-| `npm run build` | `docusaurus build` then `scripts/merge-static.js` — produces the final combined site in `/dist` |
+| `npm run build` | `docusaurus build` then `scripts/merge-static.js` — produces the combined site in `/dist` with local paths (`baseUrl: /docs/`) |
+| `npm run build:gh-pages` | Same as `npm run build`, but with `DEPLOY_TARGET=gh-pages` so Docusaurus builds with `baseUrl: /traefik/docs/` and `merge-static.js` rewrites the app's `/docs/intro` links to `/traefik/docs/intro` to match the GitHub Pages project-site path |
 | `npm run build:docs` | `docusaurus build` only, output in `/build` |
 | `npm run serve` | Serve the combined production build: `serve dist -l 3000` (requires `npm run build` first) |
 | `npm run serve:docs` | `docusaurus serve` (docs-only build, from `/build`) |
@@ -35,17 +36,9 @@ Keep this in mind when editing `docusaurus.config.js`, `Dockerfile`, or the npm 
 
 There is no lint or test suite configured in `package.json`.
 
-### Docker
+## Deployment
 
-```bash
-docker build -t traefik-mastery .          # multi-stage: npm ci -> npm run build -> serve dist
-docker run -p 3000:3000 traefik-mastery
-docker-compose up -d
-docker-compose logs -f traefik-mastery
-docker-compose down
-```
-
-The Dockerfile's final `CMD` is `serve dist -l 3000` — it serves the merged `dist/` output, so `npm run build` (not `build:docs`) must succeed for the image to have both the app and the docs.
+The site is deployed to GitHub Pages via `.github/workflows/deploy-pages.yml`: on every push to `main`, it runs `npm run build:gh-pages` and publishes `/dist` with `actions/deploy-pages`. There is no other deployment path (no Docker/Dockerfile) — `/dist` is the only servable artifact this project produces.
 
 ## Content Organization
 
