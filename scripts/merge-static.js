@@ -5,7 +5,8 @@
 //
 // DEPLOY_TARGET=gh-pages (set by `npm run build:gh-pages`) means Docusaurus
 // was built with baseUrl /traefik/docs/ (GitHub Pages project-site path), so
-// the app's hardcoded /docs/intro links need the same /traefik/ prefix.
+// the app's hardcoded /docs/... links and asset paths (nav links, favicon,
+// logo) need the same /traefik/ prefix.
 const fs = require('fs');
 const path = require('path');
 
@@ -25,11 +26,14 @@ if (isGhPages) {
   for (const file of fs.readdirSync(distDir)) {
     const filePath = path.join(distDir, file);
     if (file.endsWith('.html') && fs.statSync(filePath).isFile()) {
-      const rewritten = fs.readFileSync(filePath, 'utf8').replaceAll('/docs/intro', '/traefik/docs/intro');
+      const rewritten = fs
+        .readFileSync(filePath, 'utf8')
+        .replaceAll('href="/docs/', 'href="/traefik/docs/')
+        .replaceAll('src="/docs/', 'src="/traefik/docs/');
       fs.writeFileSync(filePath, rewritten);
     }
   }
-  console.log('Merged build/ -> dist/docs and app/ -> dist/ (rewrote /docs/ links -> /traefik/docs/ for GitHub Pages)');
+  console.log('Merged build/ -> dist/docs and app/ -> dist/ (rewrote /docs/ links and asset paths -> /traefik/docs/ for GitHub Pages)');
 } else {
   console.log('Merged build/ -> dist/docs and app/ -> dist/');
 }
