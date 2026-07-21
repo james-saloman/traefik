@@ -6,21 +6,15 @@ description: Welcome to Traefik Mastery - a comprehensive learning resource
 
 # Welcome to Traefik Mastery
 
-A comprehensive, practical guide to mastering **Traefik** – the modern reverse proxy and load balancer for cloud-native applications.
+A practical, production-focused guide to **Traefik** – the modern reverse proxy and load balancer for cloud-native applications.
 
 ## What You'll Learn
 
-This course takes you from **networking fundamentals** all the way through **production-grade deployment patterns**. Whether you're new to proxies or optimizing existing infrastructure, you'll find clear explanations with hands-on labs.
+This course goes from **Traefik architecture** through **production-grade deployment patterns**: routing internals, middleware chains, TLS, Kubernetes integration, observability, and hardening.
 
 ### Learning Paths
 
-**Beginner (1-2 weeks)**
-- Networking Fundamentals (HTTP, HTTPS, DNS, TCP/IP)
-- Traefik Core concepts (entrypoints, routers, services)
-- First hands-on lab (basic routing)
-- Docker integration
-
-**Experienced Developer (3-5 days)**
+**Developer (3-5 days)**
 - Traefik architecture deep-dive
 - Multiple hands-on labs
 - Middleware chains and authentication
@@ -52,9 +46,6 @@ Debugging & Troubleshooting
 
 By the end of this course, you'll understand:
 
-- How HTTP/HTTPS work under the hood
-- What DNS resolution and service discovery are
-- How reverse proxies and load balancing work
 - Traefik architecture: entrypoints → routers → services → backends
 - Dynamic configuration and auto-discovery
 - TLS/SSL certificate management
@@ -65,11 +56,10 @@ By the end of this course, you'll understand:
 
 ## Quick Start
 
-1. **Start with basics**: Read [HTTP Fundamentals](networking-fundamentals/what-is-http.md)
-2. **Learn Traefik**: Explore [Traefik Overview](traefik-core/traefik-overview.md)
-3. **Get hands-on**: Run [Lab 1: Basic Routing](hands-on-labs/01-basic-routing/README.md)
-4. **Go deeper**: Study [Internals](internals/docker-event-watching.md)
-5. **Deploy confidently**: Review [Production Architecture](production-architecture/multi-service-apps.md)
+1. **Learn Traefik**: Explore [Traefik Overview](traefik-core/traefik-overview.md)
+2. **Get hands-on**: Run [Lab 1: Basic Routing](hands-on-labs/01-basic-routing/README.md)
+3. **Go deeper**: Study [Internals](internals/docker-event-watching.md)
+4. **Deploy confidently**: Review [Production Architecture](production-architecture/multi-service-apps.md)
 
 ## How to Use This Course
 
@@ -80,27 +70,14 @@ By the end of this course, you'll understand:
 
 ## Prerequisites
 
-- Basic familiarity with **Docker** (containers, docker-compose)
-- Comfort with **YAML** syntax
-- Understanding of **HTTP requests/responses**
-- Terminal/CLI basics
+- Working knowledge of **Docker** and **Kubernetes**
+- Comfort reading/writing **YAML**
 
 ## Getting Help
 
 - Check [Troubleshooting Checklist](cheatsheets/troubleshooting-checklist.md) for common issues
 - Review [Debugging Guide](debugging/access-logs.md) for deep investigation
 - See [Security Best Practices](debugging/security-best-practices.md) for production concerns
-
-## What is Traefik?
-
-Traefik is a **modern reverse proxy and load balancer** that automatically discovers services and routes traffic to them. Unlike traditional proxies, Traefik watches your infrastructure and reconfigures itself in real-time.
-
-### Perfect For:
-- Docker Compose environments
-- Kubernetes clusters
-- Microservices architectures
-- Automatic HTTPS (Let's Encrypt)
-- Zero-config service discovery
 
 ## Success Criteria
 
@@ -116,4 +93,4 @@ You'll know you've mastered Traefik when you can:
 
 ---
 
-**Ready?** Let's start with [HTTP Fundamentals](networking-fundamentals/what-is-http.md).
+**Ready?** Let's start with the [Traefik Overview](traefik-core/traefik-overview.md).
