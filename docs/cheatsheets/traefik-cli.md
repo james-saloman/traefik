@@ -4,6 +4,41 @@ title: Traefik CLI Cheatsheet
 
 # Traefik CLI Cheatsheet
 
+## Common Commands
+
+```bash
+# Print version, codename, Go version, build date
+traefik version
+
+# Run Traefik with a static config file
+traefik --configfile=/etc/traefik/traefik.yml
+
+# Show all available flags
+traefik --help
+
+# Show help for a specific subcommand
+traefik healthcheck --help
+
+# Call the /ping endpoint and exit 0/1 (needs --ping=true) — used in
+# Docker HEALTHCHECK / Kubernetes probes
+traefik healthcheck --ping
+```
+
+Inside a running container:
+
+```bash
+# Check the version Traefik is actually running
+docker exec traefik traefik version
+
+# Run the same health check the container's HEALTHCHECK uses
+docker exec traefik traefik healthcheck --ping
+
+# Tail logs
+docker logs -f traefik
+```
+
+No reload command is needed after editing a file provider's dynamic config — Traefik watches the file and picks up changes automatically.
+
 ## Common Flags
 
 ```bash
@@ -60,4 +95,3 @@ Run with:
 ```bash
 traefik --configFile=traefik.yml
 ```
-

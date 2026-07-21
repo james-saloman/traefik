@@ -133,26 +133,41 @@ Allows one server with multiple certificates.
 
 ## Self-Signed Certificates (Development)
 
-For development/testing:
+`localtest.me` (and any subdomain of it, e.g. `app.localtest.me`) is a public DNS name that always resolves to `127.0.0.1`, so it's a convenient stand-in for a real domain during local development — no `/etc/hosts` edits needed.
 
 ```bash
-# Generate self-signed cert
+# Generate self-signed cert for app.localtest.me
 openssl req -x509 -newkey rsa:4096 -nodes \
-  -out /etc/traefik/certs/self-signed.crt \
-  -keyout /etc/traefik/certs/self-signed.key \
-  -days 365
+  -out /etc/traefik/certs/localtest-me.crt \
+  -keyout /etc/traefik/certs/localtest-me.key \
+  -days 365 \
+  -subj "/CN=app.localtest.me" \
+  -addext "subjectAltName=DNS:app.localtest.me,DNS:*.localtest.me"
 ```
+
+The `subjectAltName` is required — without it, modern browsers and curl reject the cert's hostname even though it's otherwise valid.
 
 Configure in Traefik:
 
 ```yaml
 tls:
   certificates:
-    - certFile: /etc/traefik/certs/self-signed.crt
-      keyFile: /etc/traefik/certs/self-signed.key
+    - certFile: /etc/traefik/certs/localtest-me.crt
+      keyFile: /etc/traefik/certs/localtest-me.key
 ```
 
-Browser shows warning (expected for self-signed).
+Route to it:
+
+```yaml
+http:
+  routers:
+    app:
+      rule: "Host(`app.localtest.me`)"
+      service: app
+      tls: {}
+```
+
+Visit `https://app.localtest.me`. Browser still shows a warning (expected for self-signed — the CA isn't trusted, only the hostname matches).
 
 ## Certificate Chain
 
